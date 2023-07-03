@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  postgres:
+    container_name: postgres
+    image: docker.io/postgres:15.3-alpine3.18@sha256:8aa5154e724b1d5c23d3df387a65e975d67253292d224ffdc22d125c0d6d4bda
+    volumes:
+      - ${REMOTE_PROJECT_PATH:-.}/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:ro
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_MULTIPLE_DATABASES: application
+    ports:
+      - "5432:5432"
+
+  run-query:
+    container_name: run-query
+    image: de.turing85/run-query:jvm
+    profiles:
+      - service
+    environment:
+      DB_HOST: postgres:5432
+      DB_USERNAME: application
+      DB_PASSWORD: application
+    ports:
+      - "8080:8080"
+
+  native-run-query:
+    container_name: run-query
+    image: de.turing85/run-query:native
+    profiles:
+      - native-service
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: application
+      DB_PASSWORD: application
+    ports:
+      - "8080:8080"
