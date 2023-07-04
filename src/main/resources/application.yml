@@ -1,12 +1,13 @@
-quarkus:
-  datasource:
-    db-kind: postgresql
-    username: ${DB_USERNAME:application}
-    password: ${DB_PASSWORD:application}
-    jdbc:
-      url: jdbc:${quarkus.datasource.db-kind}://${DB_HOST:localhost:5432}/${DB_NAME:application}
-      min-size: ${DB_MIN_SIZE:2}
-      max-size: ${DB_MAX_SIZE:8}
+"%prod":
+  quarkus:
+    datasource:
+      db-kind: postgresql
+      username: ${DB_USERNAME:application}
+      password: ${DB_PASSWORD:application}
+      jdbc:
+        url: jdbc:${quarkus.datasource.db-kind}://${DB_HOST:localhost:5432}/${DB_NAME:application}
+        min-size: ${DB_MIN_SIZE:2}
+        max-size: ${DB_MAX_SIZE:8}
 
 "%test":
   quarkus:
