@@ -20,13 +20,12 @@ import jakarta.ws.rs.core.Response;
 
 import io.agroal.api.AgroalDataSource;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Path(RunQueryResource.PATH)
 @RequiredArgsConstructor
-@Slf4j
 public class RunQueryResource {
   public static final String PATH = "run-query";
+  private static final String NO_RESULT_MESSAGE = "No results were returned by the query.";
 
   private final AgroalDataSource dataSource;
 
@@ -40,22 +39,18 @@ public class RunQueryResource {
       return Response.ok(transformToCsv(rs)).build();
     } catch (Exception e) {
       final String message = e.getMessage();
-      if ("No results were returned by the query.".equals(message)) {
+      if (NO_RESULT_MESSAGE.equals(message)) {
         return Response.ok(message).build();
       }
-      log.error("Error", e);
       return Response.status(Response.Status.BAD_REQUEST).entity(message).build();
     }
   }
 
   private static String transformToCsv(ResultSet resultSet) throws SQLException {
-    final StringBuilder response = new StringBuilder();
+    StringBuilder response =
+        new StringBuilder().append(getColumnNames(resultSet)).append(System.lineSeparator());
     while (resultSet.next()) {
-      if (resultSet.isFirst()) {
-        String header = getColumnNames(resultSet);
-        response.append(header).append(System.lineSeparator());
-      }
-      String values = getValues(resultSet);
+      String values = getColumValues(resultSet);
       response.append(values).append(System.lineSeparator());
     }
     return response.toString();
@@ -70,8 +65,7 @@ public class RunQueryResource {
     return String.join(", ", columns);
   }
 
-  private static String getValues(ResultSet resultSet) throws SQLException {
-
+  private static String getColumValues(ResultSet resultSet) throws SQLException {
     List<String> columns = new ArrayList<>();
     for (int index = 1; index <= resultSet.getMetaData().getColumnCount(); ++index) {
       columns.add(resultSet.getString(index));
