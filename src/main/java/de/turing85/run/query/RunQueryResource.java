@@ -1,7 +1,12 @@
 package de.turing85.run.query;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -15,9 +20,11 @@ import jakarta.ws.rs.core.Response;
 
 import io.agroal.api.AgroalDataSource;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Path(RunQueryResource.PATH)
 @RequiredArgsConstructor
+@Slf4j
 public class RunQueryResource {
   public static final String PATH = "run-query";
 
@@ -29,10 +36,46 @@ public class RunQueryResource {
   public Response runQuery(@Valid @NotNull @QueryParam("query") String query) {
     try (Connection connection = dataSource.getConnection();
         Statement statement = connection.createStatement()) {
-      statement.execute(query);
-      return Response.status(Response.Status.OK).build();
+      final ResultSet rs = statement.executeQuery(query);
+      return Response.ok(transformToCsv(rs)).build();
     } catch (Exception e) {
-      return Response.status(Response.Status.BAD_REQUEST).build();
+      final String message = e.getMessage();
+      if ("No results were returned by the query.".equals(message)) {
+        return Response.ok(message).build();
+      }
+      log.error("Error", e);
+      return Response.status(Response.Status.BAD_REQUEST).entity(message).build();
     }
+  }
+
+  private static String transformToCsv(ResultSet resultSet) throws SQLException {
+    final StringBuilder response = new StringBuilder();
+    while (resultSet.next()) {
+      if (resultSet.isFirst()) {
+        String header = getColumnNames(resultSet);
+        response.append(header).append(System.lineSeparator());
+      }
+      String values = getValues(resultSet);
+      response.append(values).append(System.lineSeparator());
+    }
+    return response.toString();
+  }
+
+  private static String getColumnNames(ResultSet resultSet) throws SQLException {
+    List<String> columns = new ArrayList<>();
+    final ResultSetMetaData metaData = resultSet.getMetaData();
+    for (int index = 1; index <= metaData.getColumnCount(); ++index) {
+      columns.add(metaData.getColumnName(index));
+    }
+    return String.join(", ", columns);
+  }
+
+  private static String getValues(ResultSet resultSet) throws SQLException {
+
+    List<String> columns = new ArrayList<>();
+    for (int index = 1; index <= resultSet.getMetaData().getColumnCount(); ++index) {
+      columns.add(resultSet.getString(index));
+    }
+    return String.join(", ", columns);
   }
 }
