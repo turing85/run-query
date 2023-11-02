@@ -2,7 +2,7 @@ version: "3.8"
 services:
   postgres:
     container_name: postgres
-    image: docker.io/postgres:15.3-alpine3.18@sha256:8aa5154e724b1d5c23d3df387a65e975d67253292d224ffdc22d125c0d6d4bda
+    image: docker.io/postgres:16.0-alpine3.18@sha256:d171d14965e28764824b33974d038aea3a6be3bf0ced3c8656c848df9b7218c5
     volumes:
       - ${REMOTE_PROJECT_PATH:-.}/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:ro
     environment:
