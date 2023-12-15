@@ -96,7 +96,7 @@ jobs:
             verify
 
       - name: Upload Maven State
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           if-no-files-found: error
@@ -105,7 +105,7 @@ jobs:
           retention-days: 2
 
       - name: Upload Compiled Classes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           if-no-files-found: error
@@ -114,7 +114,7 @@ jobs:
           retention-days: 2
 
       - name: Upload JARs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           if-no-files-found: error
@@ -123,7 +123,7 @@ jobs:
           retention-days: 2
 
       - name: Upload Fast-JAR
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           if-no-files-found: error
@@ -132,7 +132,7 @@ jobs:
           retention-days: 2
 
       - name: Upload Test Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           if-no-files-found: error
@@ -176,7 +176,7 @@ jobs:
             verify
 
       - name: Upload executable
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           if-no-files-found: error
@@ -187,7 +187,7 @@ jobs:
           retention-days: 2
 
       - name: Upload Test Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           if-no-files-found: error
