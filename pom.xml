@@ -32,7 +32,7 @@
     <!-- Test dependency versions -->
     <quarkus-cucumber.version>1.0.0</quarkus-cucumber.version>
     <truth.version>1.4.1</truth.version>
-    <weld-junit5.version>4.0.1.Final</weld-junit5.version>
+    <weld-junit5.version>4.0.2.Final</weld-junit5.version>
 
     <!-- Project setup -->
     <dependency-check-maven.skip>true</dependency-check-maven.skip>
