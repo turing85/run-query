@@ -30,9 +30,9 @@ concurrency:
 env:
   DOCKER_BUILDKIT: 1
   GRAALVM_DISTRIBUTION: mandrel
-  GRAALVM_VERSION: mandrel-22.3.2.1-Final
-  JAVA_VERSION: 17
-  MANDREL_VERSION: 22.3.2.1-Final
+  GRAALVM_VERSION: mandrel-23.1.2.0-Final
+  JAVA_VERSION: 21
+  MANDREL_VERSION: 23.1.2.0-Final
 
 permissions:
   actions: write
