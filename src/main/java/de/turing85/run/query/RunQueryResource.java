@@ -34,8 +34,8 @@ public class RunQueryResource {
   @Transactional
   public Response runQuery(@Valid @NotNull @QueryParam("query") String query) {
     try (Connection connection = dataSource.getConnection();
-        Statement statement = connection.createStatement()) {
-      final ResultSet rs = statement.executeQuery(query);
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(query)) {
       return Response.ok(transformToCsv(rs)).build();
     } catch (Exception e) {
       final String message = e.getMessage();
